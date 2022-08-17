@@ -9,11 +9,12 @@ clock = pygame.time.Clock()
 FPS = 60
 
 #game window
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 640
 LOWER_MARGIN = 100
-SIDE_MARGIN = 300
+SIDE_MARGIN = 360
 
+# screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((SCREEN_WIDTH + SIDE_MARGIN, SCREEN_HEIGHT + LOWER_MARGIN))
 pygame.display.set_caption('Level Editor')
 
@@ -22,14 +23,14 @@ pygame.display.set_caption('Level Editor')
 ROWS = 11
 MAX_COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
-TILE_TYPES = 16
+TILE_TYPES = 32
 level = 0
 current_tile = 0
 scroll_left = False
 scroll_right = False
 scroll = 0
 scroll_speed = 1
-tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1]
 # tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]
 
 #load images
@@ -59,12 +60,15 @@ font = pygame.font.SysFont('Futura', 30)
 #create empty tile list
 world_data = []
 for row in range(ROWS):
-	r = [-1] * MAX_COLS
-	world_data.append(r)
+	cell_row = []
+	for col in range(MAX_COLS):
+		cell = [-1,-1,-1]
+		cell_row.append(cell)
+	world_data.append(cell_row)
 
 #create ground
 for tile in range(0, MAX_COLS):
-	world_data[ROWS - 1][tile] = 0
+	world_data[ROWS - 1][tile] = [-1,-1,-1]
 
 
 #function for outputting text onto the screen
@@ -96,10 +100,13 @@ def draw_grid():
 #function for drawing the world tiles
 def draw_world():
 	for y, row in enumerate(world_data):
-		for x, tile in enumerate(row):
-			if tile >= 0:
-				img_height = tile_heights[tile]
-				screen.blit(img_list[tile], (x * TILE_SIZE - scroll, (y-(img_height-1)) * TILE_SIZE))
+		for x, tiles in enumerate(row):
+			#print(tiles)
+			for z, tile in enumerate(tiles):
+				if tile >= 0:
+					#print(tile)
+					img_height = tile_heights[tile]
+					screen.blit(img_list[tile], (x * TILE_SIZE - scroll, (y-(img_height-1)) * TILE_SIZE))
 
 
 
@@ -114,7 +121,7 @@ for i in range(len(img_list)):
 	tile_button = button.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_list[i], 1)
 	button_list.append(tile_button)
 	button_col += 1
-	if button_col == 3:
+	if button_col == 4:
 		button_row += 1
 		button_col = 0
 
@@ -134,23 +141,158 @@ while run:
 	#save and load data
 	if save_button.draw(screen):
 		#save level data
-		with open(f'level_{level}_terrain.csv', 'w', newline='') as csvfile:
+		with open(f'level_files/level_{level}_terrain.csv', 'w', newline='') as csvfile:
 			writer = csv.writer(csvfile, delimiter = ',')
 			for row in world_data:
-				writer.writerow(row)
+				new_row =[]
+				for tiles in row:
+					element = tiles[1]
+					if element not in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]:
+						element = -1
+					new_row.append(element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_bg_palms.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[0]
+					new_element = -1
+					if element in [16]:
+						new_element = element - 14
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_fg_palms.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[2]
+					new_element = -1
+					if element in [17,18]:
+						new_element = element - 17
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_crates.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[1]
+					new_element = -1
+					if element in [19]:
+						new_element = element - 19
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_enemies.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[1]
+					new_element = -1
+					if element in [20,21,22]:
+						new_element = element - 20
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_coins.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[1]
+					new_element = -1
+					if element in [23,24]:
+						new_element = element - 23
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_grass.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[2]
+					new_element = -1
+					if element in [25,26,27,28,29]:
+						new_element = element - 25
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_player.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[1]
+					new_element = -1
+					if element in [-1,30,31]:
+						new_element = element - 30
+					new_row.append(new_element)
+				writer.writerow(new_row)
 		#alternative pickle method
 		#pickle_out = open(f'level{level}_data', 'wb')
 		#pickle.dump(world_data, pickle_out)
 		#pickle_out.close()
+
+
 	if load_button.draw(screen):
+		world_data = []
+		for row in range(ROWS):
+			cell_row = []
+			for col in range(MAX_COLS):
+				cell = [-1,-1,-1]
+				cell_row.append(cell)
+			world_data.append(cell_row)
 		#load in level data
 		#reset scroll back to the start of the level
 		scroll = 0
-		with open(f'level_{level}_terrain.csv', newline='') as csvfile:
+		with open(f'level_files/level_{level}_grass.csv', newline='') as csvfile:
 			reader = csv.reader(csvfile, delimiter = ',')
 			for x, row in enumerate(reader):
 				for y, tile in enumerate(row):
-					world_data[x][y] = int(tile)
+					if(int(tile)>-1):
+						world_data[x][y][2] = int(tile)+25 ###
+		with open(f'level_files/level_{level}_terrain.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][1] = int(tile)
+		with open(f'level_files/level_{level}_bg_palms.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][0] = int(tile)+14
+		with open(f'level_files/level_{level}_fg_palms.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][2] = int(tile)+17
+		with open(f'level_files/level_{level}_crates.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][1] = int(tile)+19
+		with open(f'level_files/level_{level}_enemies.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][1] = int(tile)+20
+		with open(f'level_files/level_{level}_coins.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][1] = int(tile)+23
+		with open(f'level_files/level_{level}_player.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][1] = int(tile)+30
 		#alternative pickle method
 		#world_data = []
 		#pickle_in = open(f'level{level}_data', 'rb')
@@ -184,11 +326,16 @@ while run:
 	#check that the coordinates are within the tile area
 	if pos[0] < SCREEN_WIDTH and pos[1] < SCREEN_HEIGHT:
 		#update tile value
+		layer = 1
+		if(current_tile in [16]):
+			layer = 0
+		if(current_tile in [17,18,25,26,27,28]):
+			layer = 2
 		if pygame.mouse.get_pressed()[0] == 1:
-			if world_data[y][x] != current_tile:
-				world_data[y][x] = current_tile
+			if world_data[y][x][layer] != current_tile:
+				world_data[y][x][layer] = current_tile
 		if pygame.mouse.get_pressed()[2] == 1:
-			world_data[y][x] = -1
+			world_data[y][x] = [-1,-1,-1]
 
 
 	for event in pygame.event.get():
