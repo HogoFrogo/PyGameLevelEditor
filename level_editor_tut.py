@@ -55,7 +55,7 @@ WHITE = (255, 255, 255)
 RED = (200, 25, 25)
 
 #define font
-font = pygame.font.SysFont('Futura', 30)
+font = pygame.font.SysFont('Futura', 20)
 
 #create empty tile list
 world_data = []
@@ -136,7 +136,8 @@ while run:
 	draw_world()
 
 	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +RShift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
-	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 60)
+	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 65)
+	draw_text(f'!Warning - bottom crashing!', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
 
 	#save and load data
 	if save_button.draw(screen):
@@ -332,6 +333,7 @@ while run:
 		if(current_tile in [17,18,25,26,27,28]):
 			layer = 2
 		if pygame.mouse.get_pressed()[0] == 1:
+			print(layer)
 			if world_data[y][x][layer] != current_tile:
 				world_data[y][x][layer] = current_tile
 		if pygame.mouse.get_pressed()[2] == 1:
