@@ -228,6 +228,9 @@ while run:
 						new_element = element - 30
 					new_row.append(new_element)
 				writer.writerow(new_row)
+		#soundeffect
+		save_sound = pygame.mixer.Sound('save.wav')
+		save_sound.play(0)
 		#alternative pickle method
 		#pickle_out = open(f'level{level}_data', 'wb')
 		#pickle.dump(world_data, pickle_out)
