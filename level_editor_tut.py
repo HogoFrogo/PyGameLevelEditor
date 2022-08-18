@@ -55,7 +55,7 @@ WHITE = (255, 255, 255)
 RED = (200, 25, 25)
 
 #define font
-font = pygame.font.SysFont('Futura', 30)
+font = pygame.font.SysFont('Futura', 20)
 
 #create empty tile list
 world_data = []
@@ -135,8 +135,9 @@ while run:
 	draw_grid()
 	draw_world()
 
-	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +RShift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
-	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 60)
+	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +Shift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
+	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 65)
+	draw_text(f'Editor for HogoFrogo', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
 
 	#save and load data
 	if save_button.draw(screen):
@@ -325,6 +326,8 @@ while run:
 	pos = pygame.mouse.get_pos()
 	x = (pos[0] + scroll) // TILE_SIZE
 	y = pos[1] // TILE_SIZE
+	if(y>10):
+		y=10
 
 	#check that the coordinates are within the tile area
 	if pos[0] < SCREEN_WIDTH and pos[1] < SCREEN_HEIGHT:
@@ -356,6 +359,8 @@ while run:
 				scroll_right = True
 			if event.key == pygame.K_RSHIFT:
 				scroll_speed = 5
+			if event.key == pygame.K_LSHIFT:
+				scroll_speed = 5
 
 
 		if event.type == pygame.KEYUP:
@@ -364,6 +369,8 @@ while run:
 			if event.key == pygame.K_RIGHT:
 				scroll_right = False
 			if event.key == pygame.K_RSHIFT:
+				scroll_speed = 1
+			if event.key == pygame.K_LSHIFT:
 				scroll_speed = 1
 
 
