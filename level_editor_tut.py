@@ -137,7 +137,7 @@ while run:
 
 	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +RShift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
 	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 65)
-	draw_text(f'!Warning - bottom crashing!', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
+	draw_text(f'Editor for HogoFrogo', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
 
 	#save and load data
 	if save_button.draw(screen):
@@ -323,6 +323,8 @@ while run:
 	pos = pygame.mouse.get_pos()
 	x = (pos[0] + scroll) // TILE_SIZE
 	y = pos[1] // TILE_SIZE
+	if(y>10):
+		y=10
 
 	#check that the coordinates are within the tile area
 	if pos[0] < SCREEN_WIDTH and pos[1] < SCREEN_HEIGHT:
@@ -333,7 +335,6 @@ while run:
 		if(current_tile in [17,18,25,26,27,28]):
 			layer = 2
 		if pygame.mouse.get_pressed()[0] == 1:
-			print(layer)
 			if world_data[y][x][layer] != current_tile:
 				world_data[y][x][layer] = current_tile
 		if pygame.mouse.get_pressed()[2] == 1:
