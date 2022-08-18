@@ -135,7 +135,7 @@ while run:
 	draw_grid()
 	draw_world()
 
-	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +RShift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
+	draw_text('UP/DOWN - change level, LEFT/RIGHT - scroll, +Shift - speed', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
 	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 65)
 	draw_text(f'Editor for HogoFrogo', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
 
@@ -356,6 +356,8 @@ while run:
 				scroll_right = True
 			if event.key == pygame.K_RSHIFT:
 				scroll_speed = 5
+			if event.key == pygame.K_LSHIFT:
+				scroll_speed = 5
 
 
 		if event.type == pygame.KEYUP:
@@ -364,6 +366,8 @@ while run:
 			if event.key == pygame.K_RIGHT:
 				scroll_right = False
 			if event.key == pygame.K_RSHIFT:
+				scroll_speed = 1
+			if event.key == pygame.K_LSHIFT:
 				scroll_speed = 1
 
 
