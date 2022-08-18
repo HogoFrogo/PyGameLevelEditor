@@ -23,14 +23,14 @@ pygame.display.set_caption('Level Editor')
 ROWS = 11
 MAX_COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
-TILE_TYPES = 32
+TILE_TYPES = 35
 level = 0
 current_tile = 0
 scroll_left = False
 scroll_right = False
 scroll = 0
 scroll_speed = 1
-tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1]
+tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 # tile_heights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]
 
 #load images
@@ -62,13 +62,13 @@ world_data = []
 for row in range(ROWS):
 	cell_row = []
 	for col in range(MAX_COLS):
-		cell = [-1,-1,-1]
+		cell = [-1,-1,-1,-1]
 		cell_row.append(cell)
 	world_data.append(cell_row)
 
 #create ground
 for tile in range(0, MAX_COLS):
-	world_data[ROWS - 1][tile] = [-1,-1,-1]
+	world_data[ROWS - 1][tile] = [-1,-1,-1,-1]
 
 
 #function for outputting text onto the screen
@@ -225,8 +225,19 @@ while run:
 				for tiles in row:
 					element = tiles[1]
 					new_element = -1
-					if element in [-1,30,31]:
+					if element in [30,31]:
 						new_element = element - 30
+					new_row.append(new_element)
+				writer.writerow(new_row)
+		with open(f'level_files/level_{level}_constraints.csv', 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile, delimiter = ',')
+			for row in world_data:
+				new_row =[]
+				for tiles in row:
+					element = tiles[3]
+					new_element = -1
+					if element in [32,33,34]:
+						new_element = element - 32
 					new_row.append(new_element)
 				writer.writerow(new_row)
 		#soundeffect
@@ -243,7 +254,7 @@ while run:
 		for row in range(ROWS):
 			cell_row = []
 			for col in range(MAX_COLS):
-				cell = [-1,-1,-1]
+				cell = [-1,-1,-1,-1]
 				cell_row.append(cell)
 			world_data.append(cell_row)
 		#load in level data
@@ -297,6 +308,12 @@ while run:
 				for y, tile in enumerate(row):
 					if(int(tile)>-1):
 						world_data[x][y][1] = int(tile)+30
+		with open(f'level_files/level_{level}_constraints.csv', newline='') as csvfile:
+			reader = csv.reader(csvfile, delimiter = ',')
+			for x, row in enumerate(reader):
+				for y, tile in enumerate(row):
+					if(int(tile)>-1):
+						world_data[x][y][3] = int(tile)+32
 		#alternative pickle method
 		#world_data = []
 		#pickle_in = open(f'level{level}_data', 'rb')
@@ -337,11 +354,13 @@ while run:
 			layer = 0
 		if(current_tile in [17,18,25,26,27,28]):
 			layer = 2
+		if(current_tile in [32,33,34]):
+			layer = 3
 		if pygame.mouse.get_pressed()[0] == 1:
 			if world_data[y][x][layer] != current_tile:
 				world_data[y][x][layer] = current_tile
 		if pygame.mouse.get_pressed()[2] == 1:
-			world_data[y][x] = [-1,-1,-1]
+			world_data[y][x] = [-1,-1,-1,-1]
 
 
 	for event in pygame.event.get():
