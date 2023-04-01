@@ -1,14 +1,16 @@
+#region Imports
 import pygame
 import button
 import csv
 import pickle
+#endregion
 
 pygame.init()
 
 clock = pygame.time.Clock()
 FPS = 60
 
-#game window
+#region game window
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 640
 LOWER_MARGIN = 100
@@ -17,6 +19,7 @@ SIDE_MARGIN = 360
 # screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((SCREEN_WIDTH + SIDE_MARGIN, SCREEN_HEIGHT + LOWER_MARGIN))
 pygame.display.set_caption('Level Editor')
+#endregion
 
 
 #define game variables
@@ -141,7 +144,7 @@ while run:
 	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 65)
 	draw_text(f'Editor for HogoFrogo', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 40)
 
-	#save and load data
+	#region save and load data
 	if save_button.draw(screen):
 		#save level data
 		with open(f'level_files/level_{level}_terrain.csv', 'w', newline='') as csvfile:
@@ -266,11 +269,12 @@ while run:
 		#soundeffect
 		save_sound = pygame.mixer.Sound('save.wav')
 		save_sound.play(0)
+#endregion
+
 		#alternative pickle method
 		#pickle_out = open(f'level{level}_data', 'wb')
 		#pickle.dump(world_data, pickle_out)
 		#pickle_out.close()
-
 
 	if load_button.draw(screen):
 		world_data = []
@@ -280,9 +284,12 @@ while run:
 				cell = [-1,-1,-1,-1]
 				cell_row.append(cell)
 			world_data.append(cell_row)
-		#load in level data
+
+
+#region load in level data
 		#reset scroll back to the start of the level
 		scroll = 0
+
 		with open(f'level_files/level_{level}_grass.csv', newline='') as csvfile:
 			reader = csv.reader(csvfile, delimiter = ',')
 			for x, row in enumerate(reader):
@@ -343,11 +350,11 @@ while run:
 				for y, tile in enumerate(row):
 					if(int(tile)>-1):
 						world_data[x][y][3] = int(tile)+39
+#endregion
 		#alternative pickle method
 		#world_data = []
 		#pickle_in = open(f'level{level}_data', 'rb')
-		#world_data = pickle.load(pickle_in)
-				
+		#world_data = pickle.load(pickle_in)				
 
 	#draw tile panel and tiles
 	pygame.draw.rect(screen, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
